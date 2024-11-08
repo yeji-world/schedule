@@ -28,16 +28,16 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> readAllSchedules() {
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(String updatedDate, String name) {
 
-        return new ResponseEntity<>(scheduleService.readAllSchedules(), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findAllSchedules(updatedDate, name), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     // 식별자를 파라미터로 바인딩할 때
-    public ResponseEntity<ScheduleResponseDto> readScheduleById(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
 
-        return new ResponseEntity<>(scheduleService.readScheduleById(id), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -46,7 +46,7 @@ public class ScheduleController {
             @RequestBody ScheduleRequestDto dto
     ) {
 
-        return new ResponseEntity<>(scheduleService.updateScheduleById(id, dto.getTitle(), dto.getContent()), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateScheduleById(id, dto.getName(), dto.getPassword(), dto.getContent()), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
@@ -55,7 +55,7 @@ public class ScheduleController {
             @RequestBody ScheduleRequestDto dto
     ) {
 
-        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto.getTitle(), dto.getContent()), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto.getName(), dto.getPassword(), dto.getContent()), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

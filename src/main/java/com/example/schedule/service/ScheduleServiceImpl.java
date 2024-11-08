@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+
 
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
         this.scheduleRepository = scheduleRepository;
@@ -24,60 +26,75 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
 
         //요청받은 데이터로 메모 객체 생성 식별자 없음
-        Schedule schedule = new Schedule(dto.getTitle(), dto.getContent());
+        Schedule schedule = new Schedule(dto.getName(), dto.getPassword(), dto.getContent());
 
         //DB 저장
         return scheduleRepository.saveSchedule(schedule);
     }
 
     @Override
-    public List<ScheduleResponseDto> readAllSchedules() {
+    public List<ScheduleResponseDto> findAllSchedules(String updatedDate, String name) {
 
-        return scheduleRepository.readAllSchedules();
+        return scheduleRepository.findAllSchedules(updatedDate, name);
     }
 
     @Override
-    public ScheduleResponseDto readScheduleById(Long id) {
+    public ScheduleResponseDto findScheduleById(Long id) {
 
-        Schedule schedule = scheduleRepository.readScheduleByIdOrElseThrow(id);
+        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
 
         return new ScheduleResponseDto(schedule);
     }
 
     @Transactional
     @Override
-    public ScheduleResponseDto updateScheduleById(Long id, String title, String content) {
+    public ScheduleResponseDto updateScheduleById(Long id, String name, String password, String content) {
 
-        if(title == null || content == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title and content are required values.");
+        LocalDateTime updatedDate = LocalDateTime.now();
+
+        if(name == null || content == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name and content are required values.");
         }
 
-       int updatedRow = scheduleRepository.updateSchedule(id, title, content);
+       int updatedRow = scheduleRepository.updateSchedule(id, name, content);
 
        if (updatedRow == 0) {
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
        }
 
-        Schedule schedule = scheduleRepository.readScheduleByIdOrElseThrow(id);
+        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
+
+        if(!password.equals(schedule.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
+        }
+
+        schedule.update1(name, content, updatedDate);
 
         return new ScheduleResponseDto(schedule);
     }
 
     @Transactional
     @Override
-    public ScheduleResponseDto updateSchedule(Long id, String title, String content) {
+    public ScheduleResponseDto updateSchedule(Long id, String name, String password, String content) {
 
-        if(title == null || content != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title is required value.");
+        LocalDateTime updatedDate = LocalDateTime.now();
+
+        if(name == null && content == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name is required value.");
         }
 
-        int updatedRow = scheduleRepository.updateSchedule2(id, title);
+        int updatedRow = scheduleRepository.updateSchedule2(id, name);
 
         if (updatedRow == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
         }
+        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
 
-        Schedule schedule = scheduleRepository.readScheduleByIdOrElseThrow(id);
+        if(!password.equals(schedule.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
+        }
+
+        schedule.update1(name, content, updatedDate);
 
         return new ScheduleResponseDto(schedule);
 

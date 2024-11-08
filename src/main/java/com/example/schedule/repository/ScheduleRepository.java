@@ -3,6 +3,7 @@ package com.example.schedule.repository;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.entity.Schedule;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,15 +11,17 @@ public interface ScheduleRepository {
 
     ScheduleResponseDto saveSchedule(Schedule schedule);
 
-    List<ScheduleResponseDto> readAllSchedules();
+    List<ScheduleResponseDto> findAllSchedules(String updatedDate, String name);
 
-    Optional<Schedule> readScheduleById(Long id);
+    Optional<Schedule> findScheduleById(Long id);
 
-    Schedule readScheduleByIdOrElseThrow(Long id);
+    Schedule findScheduleByIdOrElseThrow(Long id);
 
-    int updateSchedule(Long id, String title, String content);
+//    String validatePasswordById(Long id);
 
-    int updateSchedule2(Long id, String title);
+    int updateSchedule(Long id, String name, String content);
+
+    int updateSchedule2(Long id, String name);
 
     int deleteSchedule(Long id);
 }
