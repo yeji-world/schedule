@@ -1,5 +1,6 @@
 package com.example.schedule.controller;
 
+import com.example.schedule.dto.FindAllResponseDto;
 import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.service.ScheduleService;
@@ -28,7 +29,7 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(String updatedDate, String name) {
+    public ResponseEntity<List<FindAllResponseDto>> findAllSchedules(String updatedDate, String name) {
 
         return new ResponseEntity<>(scheduleService.findAllSchedules(updatedDate, name), HttpStatus.OK);
     }
@@ -40,14 +41,14 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateScheduleById(
-            @PathVariable Long id,
-            @RequestBody ScheduleRequestDto dto
-    ) {
-
-        return new ResponseEntity<>(scheduleService.updateScheduleById(id, dto.getName(), dto.getPassword(), dto.getContent()), HttpStatus.OK);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> updateScheduleById(
+//            @PathVariable Long id,
+//            @RequestBody ScheduleRequestDto dto
+//    ) {
+//
+//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto.getName(), dto.getPassword(), dto.getContent()), HttpStatus.OK);
+//    }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(

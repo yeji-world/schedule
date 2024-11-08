@@ -1,5 +1,6 @@
 package com.example.schedule.service;
 
+import com.example.schedule.dto.FindAllResponseDto;
 import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.entity.Schedule;
@@ -33,7 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResponseDto> findAllSchedules(String updatedDate, String name) {
+    public List<FindAllResponseDto> findAllSchedules(String updatedDate, String name) {
 
         return scheduleRepository.findAllSchedules(updatedDate, name);
     }
@@ -48,7 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public ScheduleResponseDto updateScheduleById(Long id, String name, String password, String content) {
+    public ScheduleResponseDto updateSchedule(Long id, String name, String password, String content) {
 
         LocalDateTime updatedDate = LocalDateTime.now();
 
@@ -56,7 +57,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name and content are required values.");
         }
 
-       int updatedRow = scheduleRepository.updateSchedule(id, name, content);
+       int updatedRow = scheduleRepository.updateSchedule(id, name, content, updatedDate);
 
        if (updatedRow == 0) {
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
@@ -68,37 +69,37 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
         }
 
-        schedule.update1(name, content, updatedDate);
+//        schedule.update1(name, content, updatedDate);
 
         return new ScheduleResponseDto(schedule);
     }
 
-    @Transactional
-    @Override
-    public ScheduleResponseDto updateSchedule(Long id, String name, String password, String content) {
-
-        LocalDateTime updatedDate = LocalDateTime.now();
-
-        if(name == null && content == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name is required value.");
-        }
-
-        int updatedRow = scheduleRepository.updateSchedule2(id, name);
-
-        if (updatedRow == 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
-        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
-
-        if(!password.equals(schedule.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
-        }
-
-        schedule.update1(name, content, updatedDate);
-
-        return new ScheduleResponseDto(schedule);
-
-    }
+//    @Transactional
+//    @Override
+//    public ScheduleResponseDto updateSchedule(Long id, String name, String password, String content) {
+//
+//        LocalDateTime updatedDate = LocalDateTime.now();
+//
+//        if(name == null && content == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name is required value.");
+//        }
+//
+//        int updatedRow = scheduleRepository.updateSchedule2(id, name);
+//
+//        if (updatedRow == 0) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+//        }
+//        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
+//
+//        if(!password.equals(schedule.getPassword())) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
+//        }
+//
+//        schedule.update1(name, content, updatedDate);
+//
+//        return new ScheduleResponseDto(schedule);
+//
+//    }
 
     @Override
     public void deleteSchedule(Long id) {

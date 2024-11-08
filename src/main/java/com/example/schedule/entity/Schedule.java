@@ -24,14 +24,14 @@ public class Schedule {
         this.updatedDate = LocalDateTime.now();
     }
 
-    public void update1(String name, String content, LocalDateTime updatedDate) {
+    public void update(String name, String content, LocalDateTime updatedDate) {
         this.name = name;
         this.content = content;
-        this.updatedDate = LocalDateTime.now();
+        this.updatedDate = updatedDate;
     }
 
-    public void update(String name, String content) {
-        this.name = name;
-        this.content = content;
-    }
+//    public void update(String name, String content) {
+//        this.name = name;
+//        this.content = content;
+//    }
 }
