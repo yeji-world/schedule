@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class ScheduleResponseDto {
-    //응답 데이터 처리
+    // 응답 데이터 처리
 
     private Long id;
     private String name;

@@ -20,20 +20,23 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
+    // 일정 생성
     @PostMapping
-    //상태코드 반환
+    // 상태 코드 반환
     // 클라이언트로부터 json데이터 요청 -> 파라미터로 바로 바인딩
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
         //Service Layer 호출, 응답
         return new ResponseEntity<>(scheduleService.saveSchedule(dto), HttpStatus.CREATED);
     }
 
+    // 일정 전체 조회
     @GetMapping
     public ResponseEntity<List<FindAllResponseDto>> findAllSchedules(String updatedDate, String name) {
 
         return new ResponseEntity<>(scheduleService.findAllSchedules(updatedDate, name), HttpStatus.OK);
     }
 
+    // 일정 선택 조회
     @GetMapping("/{id}")
     // 식별자를 파라미터로 바인딩할 때
     public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
@@ -41,15 +44,7 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateScheduleById(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto dto
-//    ) {
-//
-//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto.getName(), dto.getPassword(), dto.getContent()), HttpStatus.OK);
-//    }
-
+    // 일정 선택 수정
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
@@ -59,6 +54,7 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, dto.getName(), dto.getPassword(), dto.getContent()), HttpStatus.OK);
     }
 
+    // 일정 선택 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
 
@@ -66,5 +62,4 @@ public class ScheduleController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

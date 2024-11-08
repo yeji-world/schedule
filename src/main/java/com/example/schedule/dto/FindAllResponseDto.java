@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class FindAllResponseDto {
-    //응답 데이터 처리
+    // 응답 데이터 처리
+    // 일정 전체 조회 시 작성일, 수정일 형식 yyyy-MM-dd
 
     private Long id;
     private String name;
