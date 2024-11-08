@@ -23,6 +23,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
+    // 일정 생성
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
 
@@ -33,12 +34,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.saveSchedule(schedule);
     }
 
+    // 일정 전체 조회
     @Override
     public List<FindAllResponseDto> findAllSchedules(String updatedDate, String name) {
 
         return scheduleRepository.findAllSchedules(updatedDate, name);
     }
 
+    // 일정 선택 조회
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
 
@@ -47,6 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(schedule);
     }
 
+    // 일정 선택 수정
     @Transactional
     @Override
     public ScheduleResponseDto updateSchedule(Long id, String name, String password, String content) {
@@ -69,38 +73,10 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
         }
 
-//        schedule.update1(name, content, updatedDate);
-
         return new ScheduleResponseDto(schedule);
     }
 
-//    @Transactional
-//    @Override
-//    public ScheduleResponseDto updateSchedule(Long id, String name, String password, String content) {
-//
-//        LocalDateTime updatedDate = LocalDateTime.now();
-//
-//        if(name == null && content == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The name is required value.");
-//        }
-//
-//        int updatedRow = scheduleRepository.updateSchedule2(id, name);
-//
-//        if (updatedRow == 0) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-//        }
-//        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
-//
-//        if(!password.equals(schedule.getPassword())) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized user");
-//        }
-//
-//        schedule.update1(name, content, updatedDate);
-//
-//        return new ScheduleResponseDto(schedule);
-//
-//    }
-
+    // 일정 선택 삭제
     @Override
     public void deleteSchedule(Long id) {
 

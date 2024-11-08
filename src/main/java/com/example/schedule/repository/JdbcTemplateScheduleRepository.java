@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +39,8 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
         parameters.put("name", schedule.getName());
         parameters.put("password", schedule.getPassword());
         parameters.put("content", schedule.getContent());
-        parameters.put("createdDate", Timestamp.valueOf(schedule.getCreatedDate()));
-        parameters.put("updatedDate", Timestamp.valueOf(schedule.getUpdatedDate()));
+        parameters.put("createdDate", schedule.getCreatedDate());
+        parameters.put("updatedDate", schedule.getUpdatedDate());
 
         // 저장 후 생성된 key값 -> Number 타입으로 반환하는 메서드
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
@@ -65,19 +64,11 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
             String sql = "select * from schedule where name = ? and date(updatedDate) = ? order by updatedDate desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(), name, updatedDate);
         }
-//        String sql = "select * from schedule where (date(updatedDate) = ? or ? is null) and (name = ? or ? is null) order by updatedDate desc";
 
         return jdbcTemplate.query("select * from schedule order by updatedDate desc", scheduleRowMapper());
     }
 
-//    // 일정 선택 조회
-//    @Override
-//    public Optional<Schedule> findScheduleById(Long id) {
-//        List<Schedule> result = jdbcTemplate.query("select * from schedule where id = ?", scheduleRowMapperV2(), id);
-//        return result.stream().findAny();
-//    }
-
-    // 일정 선택 확인 조회
+    // 일정 선택 조회
     @Override
     public Schedule findScheduleByIdOrElseThrow(Long id) {
         List<Schedule> result = jdbcTemplate.query("select * from schedule where id = ?", scheduleRowMapperV2(), id);
@@ -87,16 +78,10 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
     // 일정 선택 수정
     @Override
     public int updateSchedule(Long id, String name, String content, LocalDateTime updatedDate) {
-        int updatedRow = jdbcTemplate.update("update schedule set name = ?, content = ?, updatedDate = ? where id = ? ", name, content, updatedDate, id);
-        return updatedRow;
+        return jdbcTemplate.update("update schedule set name = ?, content = ?, updatedDate = ? where id = ? ", name, content, updatedDate, id);
     }
 
-//    @Override
-//    public int updateSchedule2(Long id, String name) {
-//        return jdbcTemplate.update("update schedule set name = ? where id = ? ", name, id);
-//    }
-
-    // 일정 삭제
+    // 일정 선택 삭제
     @Override
     public int deleteSchedule(Long id) {
        return jdbcTemplate.update("delete from schedule where id = ?", id);

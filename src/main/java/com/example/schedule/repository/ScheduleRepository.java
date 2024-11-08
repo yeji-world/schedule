@@ -9,19 +9,18 @@ import java.util.List;
 
 public interface ScheduleRepository {
 
+    // 일정 생성
     ScheduleResponseDto saveSchedule(Schedule schedule);
 
+    // 일정 전체 조회
     List<FindAllResponseDto> findAllSchedules(String updatedDate, String name);
 
-//    Optional<Schedule> findScheduleById(Long id);
-
+    // 일정 선택 조회
     Schedule findScheduleByIdOrElseThrow(Long id);
 
-//    String validatePasswordById(Long id);
-
+    // 일정 선택 수정
     int updateSchedule(Long id, String name, String content, LocalDateTime updatedDate);
 
-//    int updateSchedule2(Long id, String name);
-
+    // 일정 선택 삭제
     int deleteSchedule(Long id);
 }
